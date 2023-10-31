@@ -3,7 +3,7 @@ package model
 import "github.com/jinzhu/gorm"
 
 type Article struct {
-	Category Category //Category int
+	Category Category `gorm:"foreignkey:Cid"` //Category int
 	gorm.Model
 	Title   string `gorm:"type:varchar(100);not null" json:"title"`
 	Cid     int    `gorm:"type:int;not null" json:"cid"`
