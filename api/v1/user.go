@@ -16,6 +16,7 @@ var code int
 
 // 添加用户
 func AddUser(c *gin.Context) {
+
 	var data model.User
 	_ = c.ShouldBindJSON(&data) //将Json数据与结构体绑定
 	code = model.CheckUser(data.Username)

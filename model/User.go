@@ -8,17 +8,19 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username"`
-	Password string `gorm:"type:varchar(20);not null " json:"password"`
+	Username string `gorm:"type:varchar(20)www" json:"username"`
+	Password string `gorm:"type:varchar(20) " json:"password"`
 	Role     int    `gorm:"type:int " json:"role"`
 }
 
 // 查询用户是否存在
 func CheckUser(name string) (code int) {
 	var users User
+	fmt.Println("名字是", name)
+	fmt.Println("users.Role", users.Role)
 	db.Select("id").Where("username = ?", name).First(&users) //查询数据库中是否存在这个用户
 	if users.ID > 0 {
-		fmt.Println("users.ID", users.ID)
+		//fmt.Println("users.ID", users.ID)
 		return errmsg.ERROR_USERNAME_USED //1001
 	}
 	return errmsg.SUCCESS
