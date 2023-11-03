@@ -42,5 +42,5 @@ func InitDb() {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
 	//或许这里应该有close函数？但是似乎新版gorm里面没有了，到时候去查询一下
-	defer sqlDB.Close()
+
 }
