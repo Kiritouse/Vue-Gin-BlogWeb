@@ -2,9 +2,12 @@ package model
 
 import (
 	"Vue-Gin-BlogWeb/utils/errmsg"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/scrypt"
+	"log"
 )
 
 type User struct {
@@ -29,6 +32,7 @@ func CheckUser(name string) (code int) {
 
 // 新增用户
 func CreateUser(data *User) int {
+	data.Password = ScryptPw(data.Password)
 	err = db.Create(&data).Error //返回一个DB类型的对象去访问里面的Error对象
 	if err != nil {
 		return errmsg.ERROR
@@ -67,4 +71,19 @@ func DeleteUser(id int) int {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS
+}
+
+// 密码加密
+func ScryptPw(password string) string {
+	const KeyLen = 10
+	salt := make([]byte, 8)
+	salt = []byte{12, 32, 12, 32, 12, 32, 12, 32}
+	//参数说明：password:密码，salt：掩，N：CPU和内存消耗的指数，r：块大小，p：并行化的程度，keyLen：期望的密钥长度，见文档
+	HashPw, err := scrypt.Key([]byte(password), salt, 1<<15, 8, 1, KeyLen)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fpw := base64.StdEncoding.EncodeToString(HashPw) //base64编码，将Hash后的密码转换成字符串
+	return fpw
+
 }
