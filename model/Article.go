@@ -1,6 +1,6 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type Article struct {
 	Category Category `gorm:"foreignkey:Cid"` //Category int

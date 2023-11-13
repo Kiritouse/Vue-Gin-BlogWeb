@@ -5,14 +5,15 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/jinzhu/gorm"
+	//"github.com/jinzhu/gorm"，这gorm框架真的是撒比,啥都没有,jinzhu里面的东西千万别导入
 	"golang.org/x/crypto/scrypt"
+	"gorm.io/gorm"
 	"log"
 )
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20)www" json:"username"`
+	Username string `gorm:"type:varchar(20)" json:"username"`
 	Password string `gorm:"type:varchar(20) " json:"password"`
 	Role     int    `gorm:"type:int " json:"role"`
 }
@@ -32,7 +33,7 @@ func CheckUser(name string) (code int) {
 
 // 新增用户
 func CreateUser(data *User) int {
-	data.Password = ScryptPw(data.Password)
+	//data.Password = ScryptPw(data.Password) //密码加密
 	err = db.Create(&data).Error //返回一个DB类型的对象去访问里面的Error对象
 	if err != nil {
 		return errmsg.ERROR
@@ -53,10 +54,11 @@ func GetUsers(pageSize int, pageNum int) []User {
 
 // 编辑用户
 func EditUser(id int, data *User) int {
+	var user User
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
-	err = db.Model(&User{}).Where("id = ?", id).Updates(maps).Error //Updates 更新
+	err = db.Model(&user).Where("id = ?", id).Updates(maps).Error //Updates 更新
 	if err != nil {
 		return errmsg.ERROR
 	}
@@ -67,6 +69,7 @@ func EditUser(id int, data *User) int {
 func DeleteUser(id int) int {
 	var user User
 	err = db.Where("id = ?", id).Delete(&user).Error //删除数据
+
 	if err != nil {
 		return errmsg.ERROR
 	}
@@ -74,6 +77,19 @@ func DeleteUser(id int) int {
 }
 
 // 密码加密
+func (u *User) BeforeCreate(_ *gorm.DB) (err error) { //钩子函数，保存之前自动调用
+	u.Password = ScryptPw(u.Password)
+	fmt.Println("钩子函数调用")
+	u.Role = 2
+	return nil
+}
+
+/*
+	func (u *User) BeforeSave(_ *gorm.DB) (err error) {
+		u.Password = ScryptPw(u.Password)
+		return nil
+	}
+*/
 func ScryptPw(password string) string {
 	const KeyLen = 10
 	salt := make([]byte, 8)
