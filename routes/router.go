@@ -24,7 +24,7 @@ func InitRouter() { //如果函数名称第一个字母为大写的话就代表�
 		//文章模块的路由接口
 		router.POST("category/add", v1.AddCategory)  //向服务器提交数据
 		router.GET("category", v1.GetCate)           //查询分类列表
-		router.PUT("categroy/:id", v1.EditCate)      //编辑分类
+		router.PUT("category/:id", v1.EditCate)      //编辑分类
 		router.DELETE("category/:id", v1.DeleteCate) //
 	}
 	r.Run(utils.HttpPort)
