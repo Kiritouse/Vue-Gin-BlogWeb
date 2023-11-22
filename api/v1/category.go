@@ -73,3 +73,13 @@ func EditCate(c *gin.Context) {
 	})
 
 }
+
+// 删除分类
+func DeleteCate(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	code = model.DeleteUser(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrorMsg(code),
+	})
+}

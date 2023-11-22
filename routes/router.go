@@ -27,10 +27,12 @@ func InitRouter() { //如果函数名称第一个字母为大写的话就代表�
 		router.DELETE("category/:id", v1.DeleteCate) //
 
 		//文章模块的接口
-		router.POST("article/add", v1.AddArticle)  //向服务器提交数据
-		router.GET("article", v1.GetArt)           //查询分类列表
-		router.PUT("article/:id", v1.EditArt)      //编辑分类
-		router.DELETE("article/:id", v1.DeleteArt) //
+		router.POST("article/add", v1.AddArticle)     //向服务器提交数据
+		router.GET("article", v1.GetArt)              //查询分类列表
+		router.GET("article/list/:id", v1.GetCateArt) //查询单个分类下的所有文章
+		router.GET("article/info/:id", v1.GetArtInfo) //查询单个文章信息
+		router.PUT("article/:id", v1.EditArt)         //编辑分类
+		router.DELETE("article/:id", v1.DeleteArt)    //
 	}
 	r.Run(utils.HttpPort)
 
